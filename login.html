@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Urban Cart</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Theme Toggle Script to prevent flashing -->
+    <script>
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const icons = document.querySelectorAll('#themeToggle i');
+            icons.forEach(icon => {
+                icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const icons = document.querySelectorAll('#themeToggle i');
+            icons.forEach(icon => {
+                icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            });
+        });
+    </script>
+</head>
+
+<body
+    style="background: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80') center/cover no-repeat; min-height: 100vh; display: flex; justify-content: center; align-items: center; margin: 0; padding: 20px;">
+
+    <!-- This overlay naturally darkens the pretty background image -->
+    <div
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); z-index: -1;">
+    </div>
+
+    <div class="login-container"
+        style="position: relative; max-width: 450px; width: 100%; box-shadow: 0 30px 60px rgba(0,0,0,0.4); transform: none; visibility: visible; opacity: 1;">
+
+        <!-- Theme Toggle Button -->
+        <a href="javascript:void(0);" onclick="toggleTheme()" class="close-modal theme-modal-btn" style="text-decoration: none; right: 75px;" title="Toggle Dark/Light Mode" id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </a>
+
+        <!-- Back to Home Button instead of standard 'close' -->
+        <a href="index.html" class="close-modal" style="text-decoration: none;" title="Back to Store">
+            <i class="fas fa-times"></i>
+        </a>
+
+        <div class="login-content">
+            <!-- Brand Logo centered at top -->
+            <div style="text-align: center; margin-bottom: 30px;">
+                <a href="index.html"
+                    style="font-size: 2.2rem; font-weight: 800; color: var(--primary-color); text-decoration: none; letter-spacing: 1px;">URBAN<span
+                        style="color: var(--secondary-color);">CART</span></a>
+            </div>
+
+            <div class="login-tabs">
+                <button class="login-tab active" onclick="switchLoginTab('login')">Login</button>
+                <button class="login-tab" onclick="switchLoginTab('register')">Register</button>
+            </div>
+
+            <!-- Login Form (Email & Password Only) -->
+            <form id="loginForm" class="auth-form active" onsubmit="event.preventDefault(); handleAuth('login');">
+                <h2 style="margin-bottom: 25px; font-size: 1.8rem;">Welcome Back</h2>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 0.9rem;">
+                    <label style="display: flex; align-items: center; cursor: pointer; color: #555;">
+                        <input type="checkbox" style="margin-right: 8px; cursor: pointer;"> Remember me
+                    </label>
+                    <a href="javascript:void(0);" style="color: var(--primary-color); text-decoration: none;"
+                        onclick="alert('Password reset link sent to your email!')">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn btn-primary"
+                    style="width: 100%; border-radius: 8px; padding: 14px; font-size: 1.1rem;">Login</button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form" style="display: none;"
+                onsubmit="event.preventDefault(); handleAuth('register');">
+                <h2 style="margin-bottom: 25px; font-size: 1.8rem;">Create Account</h2>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Create a password" required>
+                </div>
+                <button type="submit" class="btn btn-primary"
+                    style="width: 100%; border-radius: 8px; padding: 14px; font-size: 1.1rem;">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Standalone Script for Login / Tab Switching to prevent dependency side-effects -->
+    <script>
+        window.switchLoginTab = function (tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabs = document.querySelectorAll('.login-tab');
+
+            tabs.forEach(t => t.classList.remove('active'));
+
+            if (tab === 'login') {
+                tabs[0].classList.add('active');
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                loginForm.style.animation = 'fadeIn 0.3s ease';
+            } else {
+                tabs[1].classList.add('active');
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                registerForm.style.animation = 'fadeIn 0.3s ease';
+            }
+        };
+
+        window.handleAuth = function (type) {
+            // Prevent default form submission
+            if (event && event.preventDefault) event.preventDefault();
+            
+            if (type === 'login') {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+
+                // Validate credentials against user's specific requirement
+                if (email !== 'moorthisundhara15@gmail.com' || (password !== 'Moorthi' && password !== 'Moorthi defaultpassword')) {
+                    alert('Invalid login credentials. Please use the registered email and password.');
+                    return;
+                }
+            }
+
+            const btn = event.submitter || document.querySelector('#loginForm button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+
+            setTimeout(() => {
+                alert(type === 'login' ? 'Successfully logged in! Redirecting to the store...' : 'Account created successfully! Redirecting...');
+                window.location.href = 'index.html'; // Points back to the home page once logged in!
+            }, 1200);
+        };
+    </script>
+</body>
+
+</html>
